@@ -421,7 +421,6 @@ async function renderAddPhotos() {
         else{
             photoForm.Shared=false;
         }
-        showWaitingGif();
         API.CreatePhoto(photoForm);
         renderPhotosList();
     });
@@ -434,7 +433,7 @@ async function renderAddPhotos() {
 
 
 function renderPhotosList(){
-
+    UpdateHeader('Liste des photos', 'photosList')
     eraseContent();
     $("#newPhotoCmd").show();
     $("#content").append("<h2> En contruction </h2>");
