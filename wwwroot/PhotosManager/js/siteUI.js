@@ -431,12 +431,107 @@ async function renderAddPhotos() {
 
 
 
+function renderModifyPhotos(id) {
+    eraseContent();
+    $("#newPhotoCmd").hide();
+    let photo = API.GetPhotosById(id);
+
+    photo.then(function (result) {
+
+        $("#content").append(` <br/>
+        <form class="form" id="editPhotoForm"'>
+            <fieldset>
+                <legend>Informations</legend>
+                <input  type="text" 
+                        class="form-control" 
+                        name="Title" 
+                        id="titre"
+                        placeholder="Titre" 
+                        value="${result.Title}"
+                        required 
+                        RequireMessage = 'Veuillez entrer un titre'
+                        InvalidMessage = 'Titre invalide'/>
+    
+    
+                        <textarea id="description" name="Description" rows="4" cols="50"
+                        placeholder="Description" required 
+                        value="${result.Description}"
+                        RequireMessage = 'Veuillez entrer une description'
+                        InvalidMessage = 'Description invalide' ></textarea>
+    
+                        <input type="checkbox" id="partage" name="Shared" checked="${result.Shared}"  />
+                        <label for="partage">Partagé</label>
+                
+            </fieldset>
+            
+            <fieldset>
+                <legend>Image</legend>
+                <div class='imageUploader' 
+                        newImage='true' 
+                        controlId='Image' 
+                        imageSrc='${result.Image}' 
+                        waitingImage="images/Loading_icon.gif">
+            </div>
+            </fieldset>
+    
+            <input type='submit' name='submit' id='saveUser' value="Enregistrer" class="form-control btn-primary">
+        </form>
+        <div class="cancel">
+            <button class="form-control btn-secondary" id="abortCreateProfilCmd">Annuler</button>
+        </div>`);
+    
+        initFormValidation(); // important do to after all html injection!
+        initImageUploaders();
+
+
+    });
+
+
+
+    UpdateHeader("Modification de Photos", "modifyPhoto");
+   
+
+    $('#editPhotoForm').on("submit", function (event) {
+        let photoForm = getFormData($('#editPhotoForm'));
+        
+        event.preventDefault();
+        photoForm.Date = new Date().getTime();
+
+        if(photoForm.Shared == "on"){
+            photoForm.Shared=true;
+        }
+        else{
+            photoForm.Shared=false;
+        }
+
+        API.UpdatePhoto(photoForm);
+        renderPhotosList();
+    });
+
+    $('#abortCreateProfilCmd').on('click', renderLoginForm);
+
+}
+
+
+
 
 function renderPhotosList(){
     UpdateHeader('Liste des photos', 'photosList')
     eraseContent();
     $("#newPhotoCmd").show();
+
+    listPhoto = API.GetPhotos();
+
+    listPhoto.then(function (result) {
+
+        console.log(result);
+    });
+
+
+
+
     $("#content").append("<h2> En contruction </h2>");
+
 
 
     $("#newPhotoCmd").on("click", async function () {
