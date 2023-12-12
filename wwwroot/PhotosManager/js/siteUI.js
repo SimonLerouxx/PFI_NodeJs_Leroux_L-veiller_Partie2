@@ -9,6 +9,7 @@ let passwordError = "";
 let currentETag = "";
 let currentViewName = "photosList";
 let delayTimeOut = 200; // seconds
+const hoursOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
 
 // pour la pagination
 let photoContainerWidth = 400;
@@ -521,18 +522,57 @@ function renderPhotosList(){
     $("#newPhotoCmd").show();
 
     listPhoto = API.GetPhotos();
+    $("#content").append(`
+    <div class="photosLayout" id="photosContainer">
+        
 
+    </div>
+        
+        
+        
+        
+        
+    `);
     listPhoto.then(function (result) {
-
+        let ownerHtml = "";
         console.log(result);
+
+        result.data.forEach(photo => {
+            
+
+        if(photo.OwnerId == API.retrieveLoggedUser().Id)
+            ownerHtml = `<span> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
+            <span><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
+
+
+        $("#photosContainer").append(`
+        
+        <div class="photoLayout photoLayoutNoScrollSnap">
+            <div class="photoTitleContainer">
+                <span class="photoTitle">deez nuts
+                
+                </span>
+               ${ownerHtml}
+            </div>
+            <div style="display: block; max-width: 100%; position:relative">
+                <img src="/assetsRepository/${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+
+            </div>
+            <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                <span class="likesSummary">3
+                    <i class="fa-thumb-up">.</i>
+                </span>
+            </span>
+
+        </div>
+        
+        
+        
+        
+        `);
+        });
     });
-
-
-
-
-    $("#content").append("<h2> En contruction </h2>");
-
-
 
     $("#newPhotoCmd").on("click", async function () {
         renderAddPhotos();
