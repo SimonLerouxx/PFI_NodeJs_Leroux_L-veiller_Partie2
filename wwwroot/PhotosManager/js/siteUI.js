@@ -353,7 +353,7 @@ async function renderPhotos() {
         renderLoginForm();
     }
 
-    
+
 }
 
 
@@ -409,18 +409,18 @@ async function renderAddPhotos() {
 
     $('#addPhotoForm').on("submit", function (event) {
         let photoForm = getFormData($('#addPhotoForm'));
-        
+
         event.preventDefault();
         let loggedUser = API.retrieveLoggedUser();
         photoForm.OwnerId = loggedUser.Id;
         photoForm.Date = new Date().getTime();
         //photoForm.Image = photoForm.Avatar;
 
-        if(photoForm.Shared == "on"){
-            photoForm.Shared=true;
+        if (photoForm.Shared == "on") {
+            photoForm.Shared = true;
         }
-        else{
-            photoForm.Shared=false;
+        else {
+            photoForm.Shared = false;
         }
         API.CreatePhoto(photoForm);
         renderPhotosList();
@@ -432,12 +432,14 @@ async function renderAddPhotos() {
 
 
 
-function renderModifyPhotos(id) {
+function renderEditPhotos(id, ownerId) {
     eraseContent();
     $("#newPhotoCmd").hide();
     let photo = API.GetPhotosById(id);
 
     photo.then(function (result) {
+
+        console.log(result);
 
         $("#content").append(` <br/>
         <form class="form" id="editPhotoForm"'>
@@ -456,11 +458,11 @@ function renderModifyPhotos(id) {
     
                         <textarea id="description" name="Description" rows="4" cols="50"
                         placeholder="Description" required 
-                        value="${result.Description}"
+
                         RequireMessage = 'Veuillez entrer une description'
-                        InvalidMessage = 'Description invalide' ></textarea>
+                        InvalidMessage = 'Description invalide' >${result.Description}</textarea>
     
-                        <input type="checkbox" id="partage" name="Shared" checked="${result.Shared}"  />
+                        <input type="checkbox" id="partage" name="Shared" ${result.Shared ? 'checked' : ''} />
                         <label for="partage">Partagé</label>
                 
             </fieldset>
@@ -480,43 +482,37 @@ function renderModifyPhotos(id) {
         <div class="cancel">
             <button class="form-control btn-secondary" id="abortCreateProfilCmd">Annuler</button>
         </div>`);
-    
+
         initFormValidation(); // important do to after all html injection!
         initImageUploaders();
 
+        $('#editPhotoForm').on("submit", function (event) {
+            let photoForm = getFormData($('#editPhotoForm'));
+
+
+            event.preventDefault();
+            photoForm.Id = id;
+            photoForm.OwnerId = ownerId;
+            photoForm.Date = new Date().getTime();
+
+            photoForm.Shared = $('#partage').prop('checked');
+
+
+            API.UpdatePhoto(photoForm);
+            renderPhotosList();
+        });
+
+        $('#abortCreateProfilCmd').on('click', renderPhotosList);
 
     });
-
-
 
     UpdateHeader("Modification de Photos", "modifyPhoto");
-   
-
-    $('#editPhotoForm').on("submit", function (event) {
-        let photoForm = getFormData($('#editPhotoForm'));
-        
-        event.preventDefault();
-        photoForm.Date = new Date().getTime();
-
-        if(photoForm.Shared == "on"){
-            photoForm.Shared=true;
-        }
-        else{
-            photoForm.Shared=false;
-        }
-
-        API.UpdatePhoto(photoForm);
-        renderPhotosList();
-    });
-
-    $('#abortCreateProfilCmd').on('click', renderLoginForm);
-
 }
 
 
 
 //Likes a faire
-function renderPhotosList(){
+function renderPhotosList() {
     UpdateHeader('Liste des photos', 'photosList')
     eraseContent();
     $("#newPhotoCmd").show();
@@ -526,37 +522,32 @@ function renderPhotosList(){
     <div class="photosLayout" id="photosContainer">
         
 
-    </div>
-        
-        
-        
-        
-        
-    `);
+    </div> `);
+
     listPhoto.then(function (result) {
         let ownerHtml = "";
-        console.log(result);
+        //console.log(result);
 
         result.data.forEach(photo => {
-            
-        if("liked" == "liked"){
-            //a faire
-        }
-        if(photo.OwnerId == API.retrieveLoggedUser().Id)
-            ownerHtml = `<span> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
-            <span><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
+
+            if ("liked" == "liked") {
+                //a faire
+            }
+            if (photo.OwnerId == API.retrieveLoggedUser().Id) {
+                ownerHtml = `<span class="editCmd" photoId="${photo.Id}" ownerId="${photo.OwnerId}"> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
+            <span class="deleteCmd" photoId="${photo.Id}"><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
 
 
-        $("#photosContainer").append(`
+                $("#photosContainer").append(`
         
-        <div class="photoLayout photoLayoutNoScrollSnap detailsCmd" photoId="${photo.Id}">
-            <div class="photoTitleContainer">
+        <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+            <div class="photoTitleContainer" >
                 <span class="photoTitle">${photo.Title}
                 
                 </span>
                ${ownerHtml}
             </div>
-            <div style="display: block; max-width: 100%; position:relative">
+            <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
                 <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
                 <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
 
@@ -567,47 +558,106 @@ function renderPhotosList(){
                 </span>
             </span>
 
-        </div>
-        
-        
-        
-        
-        `);
+        </div>`);
+            }
+
+
+        });
         $(".detailsCmd").on("click", function () {
+            console.log("detail clicked");
             let photoId = $(this).attr("photoId");
             renderPhotoDetails(photoId);
+
+        });
+        $(".editCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            let ownerId = $(this).attr("ownerId");
+            renderEditPhotos(photoId, ownerId);
+
+        });
+        $(".deleteCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            renderConfirmDeletePhoto(photoId);
 
         });
         $(".likeCmd").on("click", function () {
             let photoId = $(this).attr("photoId");
             let userLikeId = $(this).attr("userLikeId");
-            
+
         });
         $(".unlikeCmd").on("click", function () {
             let photoId = $(this).attr("photoId");
             let userLikeId = $(this).attr("userLikeId");
-            
+
         });
-        
+
+        $("#newPhotoCmd").on("click", async function () {
+            renderAddPhotos();
         });
     });
 
-    $("#newPhotoCmd").on("click", async function () {
-        renderAddPhotos();
-    });
 }
 
+
+async function renderConfirmDeletePhoto(photoId) {
+    timeout();
+    let photo = API.GetPhotosById(photoId);
+
+    photo.then(function (result) {
+        eraseContent();
+        UpdateHeader("Retrait de Photos", "confirmDeletePhoto");
+        $("#newPhotoCmd").hide();
+        $("#content").append(`
+                    <div class="content loginForm">
+                        <br>
+                        <div class="form UserRow ">
+                            <h2> Voulez-vous vraiment effacer cet Photo? </h2>
+                            <div class="UserContainer noselect">
+                                <div class="UserLayout">
+                                <h4>${result.Title}</h4>
+                                <br>
+                                <br>
+                                    <div class="photoImage" style="background-image:url('${result.Image}')"></div>
+                                </div>
+                            </div>
+                        </div>           
+                        <div class="form">
+                            <button class="form-control btn-danger" id="deleteAccountCmd">Effacer</button>
+                            <br>
+                            <button class="form-control btn-secondary" id="abortDeleteAccountCmd">Annuler</button>
+                        </div>
+                    </div>
+                `);
+                $("#content").on("click", "#deleteAccountCmd", function () {
+                    // Handle delete action
+                    API.DeletePhoto(photoId);
+                    renderPhotosList();
+                    location.reload();
+                });
+        
+                // Use event delegation to handle clicks on dynamic elements
+                $("#content").on("click", "#abortDeleteAccountCmd", function () {
+                    renderPhotosList();
+                });
+    });
+
+    
+} 
+        
+    
+
+
 //Likes a faire
-function renderPhotoDetails(photoId){
+function renderPhotoDetails(photoId) {
     let photo = API.GetPhotosById(photoId);
     console.log(photo);
-    UpdateHeader("Details","details");
+    UpdateHeader("Details", "details");
     photo.then(function (result) {
         eraseContent();
         $("#newPhotoCmd").hide();
         //a faire
         let listeNomLikes = "Nic";
-    $("#content").append(`
+        $("#content").append(`
     <div>
         <span class="photoDetailsTitle">${result.Title}</span>
         <div class="">
