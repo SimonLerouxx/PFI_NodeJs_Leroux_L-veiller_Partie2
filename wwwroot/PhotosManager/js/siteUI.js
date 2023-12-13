@@ -515,7 +515,7 @@ function renderModifyPhotos(id) {
 
 
 
-
+//Likes a faire
 function renderPhotosList(){
     UpdateHeader('Liste des photos', 'photosList')
     eraseContent();
@@ -539,7 +539,9 @@ function renderPhotosList(){
 
         result.data.forEach(photo => {
             
-
+        if("liked" == "liked"){
+            //a faire
+        }
         if(photo.OwnerId == API.retrieveLoggedUser().Id)
             ownerHtml = `<span> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
             <span><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
@@ -547,21 +549,21 @@ function renderPhotosList(){
 
         $("#photosContainer").append(`
         
-        <div class="photoLayout photoLayoutNoScrollSnap">
+        <div class="photoLayout photoLayoutNoScrollSnap detailsCmd" photoId="${photo.Id}">
             <div class="photoTitleContainer">
-                <span class="photoTitle">deez nuts
+                <span class="photoTitle">${photo.Title}
                 
                 </span>
                ${ownerHtml}
             </div>
             <div style="display: block; max-width: 100%; position:relative">
-                <img src="/assetsRepository/${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
                 <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
 
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                    <i class="fa-thumb-up">.</i>
+                    <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
                 </span>
             </span>
 
@@ -571,6 +573,22 @@ function renderPhotosList(){
         
         
         `);
+        $(".detailsCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            renderPhotoDetails(photoId);
+
+        });
+        $(".likeCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            let userLikeId = $(this).attr("userLikeId");
+            
+        });
+        $(".unlikeCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            let userLikeId = $(this).attr("userLikeId");
+            
+        });
+        
         });
     });
 
@@ -579,6 +597,36 @@ function renderPhotosList(){
     });
 }
 
+//Likes a faire
+function renderPhotoDetails(photoId){
+    let photo = API.GetPhotosById(photoId);
+    console.log(photo);
+    UpdateHeader("Details","details");
+    photo.then(function (result) {
+        eraseContent();
+        $("#newPhotoCmd").hide();
+        //a faire
+        let listeNomLikes = "Nic";
+    $("#content").append(`
+    <div>
+        <span class="photoDetailsTitle">${result.Title}</span>
+        <div class="">
+            <img src="${result.Image}" alt="" class="photoDetailsLargeImage">
+        </div>
+        <span class="photoDetailsCreationDate">${new Date(result.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                <span class="likesSummary" title="${listeNomLikes}">3
+                    <i class="fa-thumb-up">.</i>
+                </span>
+            </span>
+            <div class="photoDetailsDescription">
+                ${result.Description}
+            </div>
+    </div>
+    
+    
+    `)
+    });
+}
 
 function renderVerify() {
     eraseContent();
