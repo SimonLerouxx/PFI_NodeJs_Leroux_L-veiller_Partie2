@@ -435,7 +435,7 @@ function renderPhotosUser() {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                    <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                 </span>
             </span>
 
@@ -462,10 +462,17 @@ function renderPhotosUser() {
             renderConfirmDeletePhoto(photoId);
 
         });
-        $(".likeCmd").on("click", function () {
+        $(".far.fa-thumbs-up").on("click", function () {
             let photoId = $(this).attr("photoId");
             let userLikeId = $(this).attr("userLikeId");
-
+    
+            let likeData = {
+                PhotoId: photoId,
+                UserId: userLikeId
+            };
+        
+            // Call CreateLike with the provided data
+            API.CreateLike(likeData)
         });
         $(".unlikeCmd").on("click", function () {
             let photoId = $(this).attr("photoId");
@@ -541,7 +548,7 @@ function renderPhotosDate() {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                    <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                 </span>
             </span>
 
@@ -567,7 +574,7 @@ function renderPhotosDate() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                     </span>
                 </span>
     
@@ -596,7 +603,7 @@ function renderPhotosDate() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                     </span>
                 </span>
     
@@ -623,10 +630,17 @@ function renderPhotosDate() {
             renderConfirmDeletePhoto(photoId);
 
         });
-        $(".likeCmd").on("click", function () {
+        $(".far.fa-thumbs-up").on("click", function () {
             let photoId = $(this).attr("photoId");
             let userLikeId = $(this).attr("userLikeId");
-
+    
+            let likeData = {
+                PhotoId: photoId,
+                UserId: userLikeId
+            };
+        
+            // Call CreateLike with the provided data
+            API.CreateLike(likeData)
         });
         $(".unlikeCmd").on("click", function () {
             let photoId = $(this).attr("photoId");
@@ -702,7 +716,7 @@ function renderPhotosCreateur() {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                    <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                 </span>
             </span>
 
@@ -728,7 +742,7 @@ function renderPhotosCreateur() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                     </span>
                 </span>
     
@@ -757,7 +771,7 @@ function renderPhotosCreateur() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                     </span>
                 </span>
     
@@ -784,10 +798,17 @@ function renderPhotosCreateur() {
             renderConfirmDeletePhoto(photoId);
 
         });
-        $(".likeCmd").on("click", function () {
+        $(".far.fa-thumbs-up").on("click", function () {
             let photoId = $(this).attr("photoId");
             let userLikeId = $(this).attr("userLikeId");
-
+    
+            let likeData = {
+                PhotoId: photoId,
+                UserId: userLikeId
+            };
+        
+            // Call CreateLike with the provided data
+            API.CreateLike(likeData)
         });
         $(".unlikeCmd").on("click", function () {
             let photoId = $(this).attr("photoId");
@@ -857,7 +878,7 @@ function renderPhotosKeywords(keyword) {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                    <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                 </span>
             </span>
 
@@ -883,7 +904,7 @@ function renderPhotosKeywords(keyword) {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                     </span>
                 </span>
     
@@ -912,7 +933,7 @@ function renderPhotosKeywords(keyword) {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                     </span>
                 </span>
     
@@ -939,10 +960,17 @@ function renderPhotosKeywords(keyword) {
             renderConfirmDeletePhoto(photoId);
 
         });
-        $(".likeCmd").on("click", function () {
+        $(".far.fa-thumbs-up").on("click", function () {
             let photoId = $(this).attr("photoId");
             let userLikeId = $(this).attr("userLikeId");
-
+    
+            let likeData = {
+                PhotoId: photoId,
+                UserId: userLikeId
+            };
+        
+            // Call CreateLike with the provided data
+            API.CreateLike(likeData)
         });
         $(".unlikeCmd").on("click", function () {
             let photoId = $(this).attr("photoId");
@@ -1160,7 +1188,7 @@ function renderPhotosList() {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                    <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                 </span>
             </span>
 
@@ -1186,7 +1214,7 @@ function renderPhotosList() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                     </span>
                 </span>
     
@@ -1215,7 +1243,7 @@ function renderPhotosList() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                     </span>
                 </span>
     
@@ -1241,10 +1269,17 @@ function renderPhotosList() {
             renderConfirmDeletePhoto(photoId);
 
         });
-        $(".likeCmd").on("click", function () {
+        $(".far.fa-thumbs-up").on("click", function () {
             let photoId = $(this).attr("photoId");
             let userLikeId = $(this).attr("userLikeId");
-
+    
+            let likeData = {
+                PhotoId: photoId,
+                UserId: userLikeId
+            };
+        
+            // Call CreateLike with the provided data
+            API.CreateLike(likeData)
         });
         $(".unlikeCmd").on("click", function () {
             let photoId = $(this).attr("photoId");
@@ -1313,8 +1348,15 @@ async function renderConfirmDeletePhoto(photoId) {
 //Likes a faire
 function renderPhotoDetails(photoId) {
     let photo = API.GetPhotosById(photoId);
+
+    let Likes = API.GetLikeByPhotoId(photoId);
     console.log(photo);
     UpdateHeader("Details", "details");
+
+    Likes.then(function(result){
+        console.log(result);
+
+    });
     photo.then(function (result) {
         eraseContent();
         $("#newPhotoCmd").hide();
@@ -1328,7 +1370,7 @@ function renderPhotoDetails(photoId) {
         </div>
         <span class="photoDetailsCreationDate">${new Date(result.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary" title="${listeNomLikes}">3
-                    <i class="fa-thumb-up">.</i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
                 </span>
             </span>
             <div class="photoDetailsDescription">
@@ -1344,6 +1386,21 @@ function renderPhotoDetails(photoId) {
     $("#content").on("click", "#abortDeleteAccountCmd", function () {
         location.reload();
     });
+    $(".far.fa-thumbs-up").on("click", function () {
+        let photoId = $(this).attr("photoId");
+        let userLikeId = $(this).attr("userLikeId");
+
+        let likeData = {
+            PhotoId: photoId,
+            UserId: userLikeId
+        };
+    
+        // Call CreateLike with the provided data
+        API.CreateLike(likeData)
+    });
+
+
+
     });
 }
 

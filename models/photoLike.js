@@ -10,8 +10,7 @@ export default class PhotoLike extends Model {
         this.addField('PhotoId', 'string');
         this.addField('UserId','string');
 
-        this.setKey("PhotoId");
-        this.setKey("UserId");
+        //this.setKey("PhotoId"+"UserId");
     }
 
     bindExtraData(instance) {
@@ -21,7 +20,7 @@ export default class PhotoLike extends Model {
         instance.Owner = usersRepository.get(instance.OwnerId);
         instance.Photo = photoRepo.get(instance.PhotoId);
 
-        instance.OwnerName = instance.Owner.Name;
+        //instance.OwnerName = instance.Owner.Name;
         return instance;
     }
 }
