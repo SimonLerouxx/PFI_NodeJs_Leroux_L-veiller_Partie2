@@ -39,7 +39,14 @@
       max-width: 50px; 
       max-height: 50px;
 }
-
+.sharedImage{
+    background-color: aliceblue;
+    position: absolute;
+    top: 10px; 
+    left: 70px; 
+    max-width: 50px; 
+    max-height: 50px;
+}
 .photoTitleContainer {
     height: 40px;
     display:grid;

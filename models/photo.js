@@ -20,7 +20,7 @@ export default class Photo extends Model {
     bindExtraData(instance) {
         instance = super.bindExtraData(instance);
         //console.log(instance);
-        instance.Shared = true;
+        //instance.Shared = true;
         instance.Date = new Date().getTime();
 
         let usersRepository = new Repository(new UserModel());

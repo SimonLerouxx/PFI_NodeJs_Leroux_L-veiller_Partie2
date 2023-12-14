@@ -439,8 +439,6 @@ function renderEditPhotos(id, ownerId) {
 
     photo.then(function (result) {
 
-        console.log(result);
-
         $("#content").append(` <br/>
         <form class="form" id="editPhotoForm"'>
             <fieldset>
@@ -530,9 +528,16 @@ function renderPhotosList() {
 
         result.data.forEach(photo => {
 
+            let imageShared ="";
             if ("liked" == "liked") {
                 //a faire
             }
+
+            if(photo.Shared){
+                imageShared = '<img src="http://localhost:5000/PhotosManager/images/shared.png" alt="" class="UserAvatarSmall sharedImage">';
+            }
+
+            //Si c ta photo
             if (photo.OwnerId == API.retrieveLoggedUser().Id) {
                 ownerHtml = `<span class="editCmd" photoId="${photo.Id}" ownerId="${photo.OwnerId}"> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
             <span class="deleteCmd" photoId="${photo.Id}"><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
@@ -550,6 +555,7 @@ function renderPhotosList() {
             <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
                 <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
                 <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                ${imageShared}
 
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
@@ -559,6 +565,61 @@ function renderPhotosList() {
             </span>
 
         </div>`);
+            }
+            //Si la photo est partage
+            else if(photo.Shared){
+    
+                    $("#photosContainer").append(`
+            
+            <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+                <div class="photoTitleContainer" >
+                    <span class="photoTitle">${photo.Title}
+                    
+                    </span>
+
+                </div>
+                <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
+                    <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                    <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                    ${imageShared}
+    
+                </div>
+                <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                    <span class="likesSummary">3
+                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    </span>
+                </span>
+    
+            </div>`);
+            //Si tu est admin
+            }
+            else if(API.retrieveLoggedUser().Authorizations.readAccess ==2){
+                ownerHtml = `<span class="editCmd" photoId="${photo.Id}" ownerId="${photo.OwnerId}"> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
+                <span class="deleteCmd" photoId="${photo.Id}"><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
+    
+    
+                    $("#photosContainer").append(`
+            
+            <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+                <div class="photoTitleContainer" >
+                    <span class="photoTitle">${photo.Title}
+                    
+                    </span>
+                   ${ownerHtml}
+                </div>
+                <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
+                    <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                    <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                    ${imageShared}
+    
+                </div>
+                <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                    <span class="likesSummary">3
+                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    </span>
+                </span>
+    
+            </div>`);
             }
 
 

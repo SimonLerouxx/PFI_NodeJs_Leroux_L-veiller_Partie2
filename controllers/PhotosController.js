@@ -34,7 +34,7 @@ export default
     //GetPhotos
     GetPhotos(){
         console.log("GetPhotos");
-        //this.HttpContext.response.JSON(this.repository.getAll());
+        this.HttpContext.response.JSON(this.repository.getAll());
     }
 
     //Remove Photo
