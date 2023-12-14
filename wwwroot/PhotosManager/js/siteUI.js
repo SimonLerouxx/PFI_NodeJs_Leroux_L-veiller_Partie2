@@ -176,7 +176,8 @@ function UpdateHeader(viewTitle, viewName) {
 
         </div>
     `);
-    if (sortType == "keywords" && viewName == "photosList") {
+    if (viewName == "photosList") {
+        
         $("#customHeader").show();
         $("#customHeader").empty();
         $("#customHeader").append(`
@@ -185,6 +186,10 @@ function UpdateHeader(viewTitle, viewName) {
                 <i class="cmdIcon fa fa-search" id="setSearchKeywordsCmd"></i>
             </div>
         `);
+        $("#setSearchKeywordsCmd").on("click", function (event) {
+            renderPhotosKeywords($("#keywords").val());
+
+        });
     } else {
         $("#customHeader").hide();
     }
@@ -796,7 +801,162 @@ function renderPhotosCreateur() {
     });
 
 }
+function renderPhotosKeywords(keyword) {
+    UpdateHeader('Photos par créateurs', 'photosList');
+    eraseContent();
+    $("#newPhotoCmd").show();
 
+    listPhoto = API.GetPhotos();
+    $("#content").append(`
+    <div class="photosLayout" id="photosContainer">
+        
+
+    </div> `);
+
+
+
+    listPhoto.then(function (result) {
+        let ownerHtml = "";
+        console.log(result);
+
+        console.log(keyword);
+        result.data.forEach(photo => {
+            if(photo.Title.toUpperCase().includes(keyword.toUpperCase())){
+
+            
+
+            let imageShared ="";
+            if ("liked" == "liked") {
+                //a faire
+            }
+
+            if(photo.Shared){
+                imageShared = '<img src="http://localhost:5000/PhotosManager/images/shared.png" alt="" class="UserAvatarSmall sharedImage">';
+            }
+
+            //Si c ta photo
+            if (photo.OwnerId == API.retrieveLoggedUser().Id) {
+                ownerHtml = `<span class="editCmd" photoId="${photo.Id}" ownerId="${photo.OwnerId}"> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
+            <span class="deleteCmd" photoId="${photo.Id}"><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
+
+
+                $("#photosContainer").append(`
+        
+        <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+            <div class="photoTitleContainer" >
+                <span class="photoTitle">${photo.Title}
+                
+                </span>
+               ${ownerHtml}
+            </div>
+            <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
+                <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                ${imageShared}
+
+            </div>
+            <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                <span class="likesSummary">3
+                    <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                </span>
+            </span>
+
+        </div>`);
+            }
+            //Si la photo est partage
+            else if(photo.Shared){
+    
+                    $("#photosContainer").append(`
+            
+            <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+                <div class="photoTitleContainer" >
+                    <span class="photoTitle">${photo.Title}
+                    
+                    </span>
+
+                </div>
+                <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
+                    <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                    <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                    ${imageShared}
+    
+                </div>
+                <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                    <span class="likesSummary">3
+                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    </span>
+                </span>
+    
+            </div>`);
+            //Si tu est admin
+            }
+            else if(API.retrieveLoggedUser().Authorizations.readAccess ==2){
+                ownerHtml = `<span class="editCmd" photoId="${photo.Id}" ownerId="${photo.OwnerId}"> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
+                <span class="deleteCmd" photoId="${photo.Id}"><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
+    
+    
+                    $("#photosContainer").append(`
+            
+            <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+                <div class="photoTitleContainer" >
+                    <span class="photoTitle">${photo.Title}
+                    
+                    </span>
+                   ${ownerHtml}
+                </div>
+                <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
+                    <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                    <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                    ${imageShared}
+    
+                </div>
+                <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                    <span class="likesSummary">3
+                        <i class="fa-thumb-up likeCmd" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}" >.</i>
+                    </span>
+                </span>
+    
+            </div>`);
+            }
+            
+
+        }
+        });
+        $(".detailsCmd").on("click", function () {
+            console.log("detail clicked");
+            let photoId = $(this).attr("photoId");
+            renderPhotoDetails(photoId);
+
+        });
+        $(".editCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            let ownerId = $(this).attr("ownerId");
+            renderEditPhotos(photoId, ownerId);
+
+        });
+        $(".deleteCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            renderConfirmDeletePhoto(photoId);
+
+        });
+        $(".likeCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            let userLikeId = $(this).attr("userLikeId");
+
+        });
+        $(".unlikeCmd").on("click", function () {
+            let photoId = $(this).attr("photoId");
+            let userLikeId = $(this).attr("userLikeId");
+
+        });
+
+        $("#newPhotoCmd").on("click", async function () {
+            renderAddPhotos();
+        });
+        
+    });
+
+}
 
 
 
@@ -1182,8 +1342,7 @@ function renderPhotoDetails(photoId) {
     
     `)
     $("#content").on("click", "#abortDeleteAccountCmd", function () {
-        eraseContent();
-        renderPhotosList();
+        location.reload();
     });
     });
 }
