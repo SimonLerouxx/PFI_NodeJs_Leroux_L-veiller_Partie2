@@ -7,17 +7,20 @@ export default class PhotoLike extends Model {
     constructor()
     {
         super();
-        this.addField('OwnerId', 'string');
-        this.addField('Liked','boolean');
-        this.addField('Title', 'string');
+        this.addField('PhotoId', 'string');
+        this.addField('UserId','string');
 
-        //this.setKey("Title");
+        this.setKey("PhotoId");
+        this.setKey("UserId");
     }
 
     bindExtraData(instance) {
         instance = super.bindExtraData(instance);
         let usersRepository = new Repository(new UserModel());
+        let photoRepo = new Repository(new PhotoModel());
         instance.Owner = usersRepository.get(instance.OwnerId);
+        instance.Photo = photoRepo.get(instance.PhotoId);
+
         instance.OwnerName = instance.Owner.Name;
         return instance;
     }
