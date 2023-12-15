@@ -435,7 +435,7 @@ function renderPhotosUser() {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                 </span>
             </span>
 
@@ -548,7 +548,7 @@ function renderPhotosDate() {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                 </span>
             </span>
 
@@ -574,7 +574,7 @@ function renderPhotosDate() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                     </span>
                 </span>
     
@@ -603,7 +603,7 @@ function renderPhotosDate() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                     </span>
                 </span>
     
@@ -716,7 +716,7 @@ function renderPhotosCreateur() {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                 </span>
             </span>
 
@@ -742,7 +742,7 @@ function renderPhotosCreateur() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                     </span>
                 </span>
     
@@ -771,7 +771,7 @@ function renderPhotosCreateur() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                     </span>
                 </span>
     
@@ -878,7 +878,7 @@ function renderPhotosKeywords(keyword) {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                 </span>
             </span>
 
@@ -904,7 +904,7 @@ function renderPhotosKeywords(keyword) {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                     </span>
                 </span>
     
@@ -933,7 +933,7 @@ function renderPhotosKeywords(keyword) {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${photo.Id}"></i>
                     </span>
                 </span>
     
@@ -1138,28 +1138,35 @@ function renderEditPhotos(id, ownerId) {
 
 
 //Likes a faire
-function renderPhotosList() {
+async function renderPhotosList() {
     UpdateHeader('Liste des photos', 'photosList')
     eraseContent();
     $("#newPhotoCmd").show();
 
-    listPhoto = API.GetPhotos();
+    const result = await API.GetPhotos();
     $("#content").append(`
     <div class="photosLayout" id="photosContainer">
         
 
     </div> `);
+    let thumbsUp = ``;
 
-    listPhoto.then(function (result) {
-        let ownerHtml = "";
-        //console.log(result);
+    let ownerHtml = "";
 
-        result.data.forEach(photo => {
+
+        for (const photo of result.data) {
+
+            listLikes = await API.GetLikeByPhotoId(photo.Id);
+
+            thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}''></i>`;
+           
+            //Change Like Icone
+            if (listLikes.UserId == API.retrieveLoggedUser().Id) {
+                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}' likeId='${listLikes.Id}'></i>`;
+            }
 
             let imageShared ="";
-            if ("liked" == "liked") {
-                //a faire
-            }
+
 
             if(photo.Shared){
                 imageShared = '<img src="http://localhost:5000/PhotosManager/images/shared.png" alt="" class="UserAvatarSmall sharedImage">';
@@ -1188,7 +1195,7 @@ function renderPhotosList() {
             </div>
             <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                 <span class="likesSummary">3
-                <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                ${thumbsUp}
                 </span>
             </span>
 
@@ -1214,7 +1221,7 @@ function renderPhotosList() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                    ${thumbsUp}
                     </span>
                 </span>
     
@@ -1243,15 +1250,17 @@ function renderPhotosList() {
                 </div>
                 <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
                     <span class="likesSummary">3
-                    <i class="menuIcon far fa-thumbs-up" userLikeId="${API.retrieveLoggedUser().Id}" photoId="${result.Id}"></i>
+                    ${thumbsUp}
                     </span>
                 </span>
     
             </div>`);
             }
+        }
 
 
-        });
+
+        
         $(".detailsCmd").on("click", function () {
             console.log("detail clicked");
             let photoId = $(this).attr("photoId");
@@ -1280,17 +1289,19 @@ function renderPhotosList() {
         
             // Call CreateLike with the provided data
             API.CreateLike(likeData)
+            location.reload();
         });
-        $(".unlikeCmd").on("click", function () {
-            let photoId = $(this).attr("photoId");
-            let userLikeId = $(this).attr("userLikeId");
-
+        $(".fas.fa-thumbs-up").on("click", function () {
+            let likeId = $(this).attr("likeId");
+           
+            API.DeleteLike(likeId);
+            location.reload();
         });
 
         $("#newPhotoCmd").on("click", async function () {
             renderAddPhotos();
         });
-    });
+    
 
 }
 

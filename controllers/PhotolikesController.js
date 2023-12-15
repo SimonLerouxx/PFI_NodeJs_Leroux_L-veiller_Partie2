@@ -31,9 +31,10 @@ export default
     //}
 
 
-    //index(idPhoto){
-    //    this.HttpContext.response.JSON(this.repository.get(idPhoto));
-    //}
+    get(idPhoto){
+        console.log("rentrer");
+        this.HttpContext.response.JSON(this.repository.getLikes(idPhoto));
+    }
 
    
 }

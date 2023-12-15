@@ -145,6 +145,15 @@ export default class Repository {
         }
         return null;
     }
+
+    getLikes(id) {
+        for (let object of this.objects()) {
+            if (object.PhotoId == id) {
+                return this.model.bindExtraData(object);
+            }
+        }
+        return null;
+    }
     removeByIndex(indexToDelete) {
         if (indexToDelete.length > 0) {
             utilities.deleteByIndex(this.objects(), indexToDelete);

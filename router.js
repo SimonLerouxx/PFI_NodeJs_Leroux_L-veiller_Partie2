@@ -10,6 +10,7 @@ export const API_EndPoint = async function (HttpContext) {
             try {
                 // dynamically import the targeted controller
                 // if the controllerName does not exist the catch section will be called
+
                 const { default: Controller } = await import('./controllers/' + controllerName + '.js');
 
                 // instanciate the controller       
