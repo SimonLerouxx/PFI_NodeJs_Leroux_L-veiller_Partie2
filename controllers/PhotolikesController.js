@@ -33,7 +33,13 @@ export default
 
     get(idPhoto){
         console.log("rentrer");
-        this.HttpContext.response.JSON(this.repository.getLikes(idPhoto));
+        if(idPhoto !=undefined){
+            this.HttpContext.response.JSON(this.repository.getLikes(idPhoto));
+        }
+        else{
+            this.HttpContext.response.JSON(this.repository.getAll());
+        }
+        
     }
 
    

@@ -300,6 +300,21 @@ class API {
         });
     }
 
+    //static GetAllLikes() {
+    //    API.initHttpState();
+    //    return new Promise(resolve => {
+    //        $.ajax({
+    //            url: serverHost + photoLikes_API,
+    //            type: 'GET',
+    //            headers: API.getBearerAuthorizationToken(),
+    //            success: (data, status, xhr) => {
+     //               resolve(data);
+    //            },
+    //            error: xhr => { API.setHttpErrorState(xhr); resolve(false); }
+    //        });
+    //    });
+    //}
+
     static CreateLike(data){
         API.initHttpState();
         return new Promise(resolve => {

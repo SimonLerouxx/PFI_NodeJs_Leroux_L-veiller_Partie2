@@ -147,12 +147,18 @@ export default class Repository {
     }
 
     getLikes(id) {
-        for (let object of this.objects()) {
-            if (object.PhotoId == id) {
-                return this.model.bindExtraData(object);
-            }
-        }
-        return null;
+        let objectsList = this.objects();
+        let bindedDatas = [];
+        if (objectsList)
+            for (let data of objectsList) {
+                console.log(data);
+                if(data.PhotoId == id){
+                    bindedDatas.push(this.model.bindExtraData(data));
+                }
+               
+            };
+        let collectionFilter = new CollectionFilter(bindedDatas);
+        return collectionFilter.get();
     }
     removeByIndex(indexToDelete) {
         if (indexToDelete.length > 0) {
