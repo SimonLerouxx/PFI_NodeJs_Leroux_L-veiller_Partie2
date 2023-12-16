@@ -70,7 +70,7 @@ function attachCmd() {
     $('#listPhotosMenuCmd').on('click', renderPhotos);
     $('#listPhotosDate').on('click', renderPhotosDate);
     $('#listPhotosCreateur').on('click', renderPhotosCreateur);
-    $('#listPhotosLike').on('click', renderPhotos);
+    $('#listPhotosLike').on('click', renderPhotosByLikes);
     $('#listPhotosUser').on('click', renderPhotosUser);
 
 
@@ -406,13 +406,14 @@ async function renderPhotosUser() {
     for (const photo of result.data) {
 
         listLikes = await API.GetLikeByPhotoId(photo.Id);
+        let title = await showLikesName(photo.Id);
 
-        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}''></i>`;
+        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}' title="${title}"></i>`;
 
         //Change Like Icone
         for (const like of listLikes) {
             if (like.UserId == API.retrieveLoggedUser().Id) {
-                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}'></i>`;
+                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}' title="${title}"></i>`;
             }
         }
 
@@ -533,12 +534,13 @@ async function renderPhotosDate() {
     for (const photo of result.data) {
 
         listLikes = await API.GetLikeByPhotoId(photo.Id);
+        let title = await showLikesName(photo.Id);
 
-        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}''></i>`;
+        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}' title="${title}"></i>`;
 
         for (const like of listLikes) {
             if (like.UserId == API.retrieveLoggedUser().Id) {
-                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}'></i>`;
+                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}' title="${title}"></i>`;
             }
         }
 
@@ -715,13 +717,14 @@ async function renderPhotosCreateur() {
     for (const photo of result.data) {
 
         listLikes = await API.GetLikeByPhotoId(photo.Id);
+        let title = await showLikesName(photo.Id);
 
-        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}''></i>`;
+        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}' title="${title}"></i>`;
 
         //Change Like Icone
         for (const like of listLikes) {
             if (like.UserId == API.retrieveLoggedUser().Id) {
-                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}'></i>`;
+                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}'  title="${title}"></i>`;
             }
         }
 
@@ -892,13 +895,14 @@ async function renderPhotosKeywords(keyword) {
         if (photo.Title.toUpperCase().includes(keyword.toUpperCase())) {
 
             listLikes = await API.GetLikeByPhotoId(photo.Id);
+            let title = await showLikesName(photo.Id);
 
-            thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}''></i>`;
+            thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}' title="${title}"></i>`;
 
             //Change Like Icone
             for (const like of listLikes) {
                 if (like.UserId == API.retrieveLoggedUser().Id) {
-                    thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}'></i>`;
+                    thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}' title="${title}"></i>`;
                 }
             }
 
@@ -1215,13 +1219,13 @@ async function renderPhotosList() {
     for (const photo of result.data) {
 
         listLikes = await API.GetLikeByPhotoId(photo.Id);
-
-        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}''></i>`;
+        let title = await showLikesName(photo.Id);
+        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}' title='${title}'></i>`;
 
         //Change Like Icone
         for (const like of listLikes) {
             if (like.UserId == API.retrieveLoggedUser().Id) {
-                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}'></i>`;
+                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}'  title='${title}'></i>`;
             }
         }
         let imageShared = "";
@@ -1431,16 +1435,16 @@ async function renderPhotoDetails(photoId) {
 
 
         listLikes = await API.GetLikeByPhotoId(result.Id);
+        let title = await showLikesName(result.Id);
 
         console.log(listLikes);
 
-        //allLike = await API.GetAllLikes();
 
-        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}''></i>`;
+        thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' title="${title}"></i>`;
 
         for (const like of listLikes) {
             if (like.UserId == API.retrieveLoggedUser().Id) {
-                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}'></i>`;
+                thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id}' title="${title}"></i>`;
             }
         }
         //Change Like Icone
@@ -1914,3 +1918,203 @@ function getFormData($form) {
     return jsonObject;
 }
 
+async function renderPhotosByLikes(keyword) {
+    UpdateHeader('Photos par nombre de likes', 'photosList');
+    eraseContent();
+    $("#newPhotoCmd").show();
+
+    const result = await API.GetPhotos();
+    /*result.data.sort(async function (a, b) {
+        a = await API.GetLikeByPhotoId(a.Id);
+        b = await API.GetLikeByPhotoId(b.Id);
+        
+        return a.length - b.length;
+      });
+      */
+    $("#content").append(`
+    <div class="photosLayout" id="photosContainer">
+        
+
+    </div> `);
+
+    console.log(result);
+
+    let thumbsUp = ``;
+
+    let ownerHtml = "";
+    
+      console.log(result.data);
+
+    for (const photo of result.data) {
+
+
+            listLikes = await API.GetLikeByPhotoId(photo.Id);
+            
+            let title = await showLikesName(photo.Id);
+            console.log(title);
+            thumbsUp = `<i class='menuIcon far fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${photo.Id}' title="${title}"></i>`;
+
+            //Change Like Icone
+            for (const like of listLikes) {
+                if (like.UserId == API.retrieveLoggedUser().Id) {
+                    thumbsUp = `<i class='menuIcon fas fa-thumbs-up' userLikeId='${API.retrieveLoggedUser().Id}' photoId='${result.Id}' likeId='${like.Id} 'title="${title}"></i>`;
+                }
+            }
+
+            let imageShared = "";
+
+
+            if (photo.Shared) {
+                imageShared = '<img src="http://localhost:5000/PhotosManager/images/shared.png" alt="" class="UserAvatarSmall sharedImage">';
+            }
+
+            //Si c ta photo
+            if (photo.OwnerId == API.retrieveLoggedUser().Id) {
+                ownerHtml = `<span class="editCmd" photoId="${photo.Id}" ownerId="${photo.OwnerId}"> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
+            <span class="deleteCmd" photoId="${photo.Id}"><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
+
+
+                $("#photosContainer").append(`
+        
+        <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+            <div class="photoTitleContainer" >
+                <span class="photoTitle">${photo.Title}
+                
+                </span>
+               ${ownerHtml}
+            </div>
+            <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
+                <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                ${imageShared}
+
+            </div>
+            <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                <span class="likesSummary">${listLikes.length}
+                ${thumbsUp}
+                </span>
+            </span>
+
+        </div>`);
+            }
+            //Si la photo est partage
+            else if (photo.Shared) {
+
+                $("#photosContainer").append(`
+            
+            <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+                <div class="photoTitleContainer" >
+                    <span class="photoTitle">${photo.Title}
+                    
+                    </span>
+
+                </div>
+                <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
+                    <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                    <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                    ${imageShared}
+    
+                </div>
+                <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                    <span class="likesSummary">${listLikes.length}
+                    ${thumbsUp}
+                    </span>
+                </span>
+    
+            </div>`);
+                //Si tu est admin
+            }
+            else if (API.retrieveLoggedUser().Authorizations.readAccess == 2) {
+                ownerHtml = `<span class="editCmd" photoId="${photo.Id}" ownerId="${photo.OwnerId}"> <i class="fa-solid fa-pencil dodgerblueCmd" ></i></span>
+                <span class="deleteCmd" photoId="${photo.Id}"><i class="fa-solid fa-trash dodgerblueCmd" ></i></span>`;
+
+
+                $("#photosContainer").append(`
+            
+            <div class="photoLayout photoLayoutNoScrollSnap" photoId="${photo.Id}">
+                <div class="photoTitleContainer" >
+                    <span class="photoTitle">${photo.Title}
+                    
+                    </span>
+                   ${ownerHtml}
+                </div>
+                <div class="detailsCmd" photoId="${photo.Id}" style="display: block; max-width: 100%; position:relative">
+                    <img src="${photo.Image}" alt="" class="photoImage" style="position: relative;">
+                    <img src="${photo.Owner.Avatar}" alt="" class="UserAvatarSmall cornerAvatar">
+                    ${imageShared}
+    
+                </div>
+                <span class="photoCreationDate">${new Date(photo.Date).toLocaleDateString('fr-FR', hoursOptions)}
+                    <span class="likesSummary">${listLikes.length}
+                    ${thumbsUp}
+                    </span>
+                </span>
+    
+            </div>`);
+            }
+        
+    }
+
+
+
+
+    $(".detailsCmd").on("click", function () {
+        console.log("detail clicked");
+        let photoId = $(this).attr("photoId");
+        renderPhotoDetails(photoId);
+
+    });
+    $(".editCmd").on("click", function () {
+        let photoId = $(this).attr("photoId");
+        let ownerId = $(this).attr("ownerId");
+        renderEditPhotos(photoId, ownerId);
+
+    });
+    $(".deleteCmd").on("click", function () {
+        let photoId = $(this).attr("photoId");
+        renderConfirmDeletePhoto(photoId);
+
+    });
+    $(".far.fa-thumbs-up").on("click", function () {
+        let photoId = $(this).attr("photoId");
+        let userLikeId = $(this).attr("userLikeId");
+
+        let likeData = {
+            PhotoId: photoId,
+            UserId: userLikeId
+        };
+
+        // Call CreateLike with the provided data
+        API.CreateLike(likeData)
+        //location.reload();
+        renderPhotosKeywords(keyword);
+    });
+    $(".fas.fa-thumbs-up").on("click", function () {
+        let likeId = $(this).attr("likeId");
+
+        API.DeleteLike(likeId);
+        //location.reload();
+        renderPhotosKeywords(keyword);
+    });
+
+    $("#newPhotoCmd").on("click", async function () {
+        renderAddPhotos();
+    });
+
+}
+async function showLikesName(id){
+    const likes = await API.GetLikeByPhotoId(id);
+    let stringNames = "";
+    if(likes.length != 0){
+        
+        for (const like of likes) {
+            console.log(like);
+            const user = await API.GetAccount(like.UserId);
+            stringNames = stringNames + "\n" + user.data.Name;
+        }
+    }else{
+        return "Aucun Like";
+    }
+    return stringNames;
+
+}
