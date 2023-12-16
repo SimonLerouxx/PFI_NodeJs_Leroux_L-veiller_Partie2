@@ -206,6 +206,7 @@ class API {
             });
         });
     }
+
     static GetPhotosETag() {
         API.initHttpState();
         return new Promise(resolve => {
